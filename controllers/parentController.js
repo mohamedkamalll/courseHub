@@ -1,0 +1,71 @@
+const user = require('./userController')
+const database = require('../config/databaseConnection');
+const {sendMail} = require('../config/email')
+const { v5, v1 } = require('uuid');
+
+/*
+{
+"parentEmail" : "momoooi4111iq166o@gmail.com",
+"parentFirstName" : "taherrrr",
+"parentLastName" : "ahmeddd",
+"parentPhone" : "01234516488",
+"parentCity" : "cairo",
+"parentPassword" : "351518hdsjgghjb",
+"fatherName" : "taherrrr",
+"students" :[ {"name": "ramaaa", "age": 8},{"name" : "tamerrrr" , "age" : 9}]
+}
+*/
+
+let children = []
+
+
+module.exports.addParent = async (req,res) =>{
+  const {parentFirstName ,parentLastName ,parentEmail ,parentPassword ,parentCity ,fatherName ,students } = req.body;
+    console.log(req.body)
+    try {
+         const userId = await user.createUser({
+            FirstName : parentFirstName ,
+            LastName :parentLastName ,
+            Age : null,
+            Email: parentEmail ,
+            Password :parentPassword,
+            City :parentCity ,
+            Role:"parent" 
+        },req) 
+      //   console.log("Done",userId)
+          console.log(await req.app.locals.db.query(`INSERT INTO parents (userId) VALUES ('${userId}');`)          )
+          parentId = await req.app.locals.db.query(`select parentId from parents  where userId = '${userId}';`)          
+          //console.log(parent.recordset[0].parentId)
+          students.forEach(async (element) => {
+            let child = await user.addChild(element ,parentCity ,fatherName,parentId.recordset[0].parentId);
+            sendChildren(students.length,child);         
+
+          })          
+        } catch (error) {
+         console.log(error.message)
+     }  
+
+}
+
+let body = "<table  style='border:1px solid #ccc;text-align: left;border-collapse: collapse;width: 100%;'> <tbody>";
+
+async function sendChildren(len ,child){
+  children.push(child)
+  body += `<tr style='border: 1px solid #ccc;text-align: left;padding: 15px;'>
+  <td style='border: 1px solid #ccc;text-align: left;padding: 15px;width:200px;background-color:#ddd;'>Email : </td>
+  <td style='border: 1px solid #ccc;text-align: left;padding: 15px;'>  ${child.username} </td>
+  </tr>
+  <tr style='border: 1px solid #ccc;text-align: left;padding: 15px;'>
+  <td style='border: 1px solid #ccc;text-align: left;padding: 15px;width:200px;background-color:#ddd;'>Password : </td>
+  <td style='border: 1px solid #ccc;text-align: left;padding: 15px;'>  ${child.password} </td>
+  </tr>`;
+  if(children.length == len){
+    console.log(children,"doneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+    body += "</tbody></table> ";
+    //await sendMail("Your children accounts",body)
+  }
+}
+
+
+
+

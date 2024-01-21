@@ -1,0 +1,1 @@
+[{"user":"sa","password":"","server":"localhost\\MSSQLSERVER","trustServerCertificate":true,"pool":{"max":10,"min":0}},{"user":"sa","password":"","server":"localhost\\MSSQLSERVER","database" : "academy","trustServerCertificate":true,"pool":{"max":10,"min":0}}]
