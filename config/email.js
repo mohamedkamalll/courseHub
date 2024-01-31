@@ -10,12 +10,13 @@ var transporter = nodemailer.createTransport({
   }
 });
 
-module.exports.sendMail =async (emailsubject,emailtext) =>{
+module.exports.sendMail =async (emailsubject,reciever,emailtext,emailhtml) =>{
     var mailOptions = {
         from: 'programming12AcAdemy@gmail.com',
-        to: 'ana1moka@gmail.com',
+        to: reciever,
         subject: emailsubject,
-        html: emailtext
+        text:emailtext,
+        html: emailhtml
       };
     await transporter.sendMail(mailOptions, function(error, info){
         if (error) {

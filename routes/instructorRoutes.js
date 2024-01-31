@@ -11,7 +11,7 @@ module.exports = router;
     "FirstName" : "Mohamed",
     "LastName" : "Kamal",
     "Age" : 23,
-    "Email" : "mohamedkassmsaaaasssalll@gmail.com",
-    "Password" : "usyxabgjs", 
+    "Email" : "mohamedkamal@gmail.com",
+    "Password" : "000000", 
     "City" : "Cairo"
 } */

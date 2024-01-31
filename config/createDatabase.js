@@ -5,7 +5,7 @@ const config = require('./databaseConfig.json')
 //const config = JSON.parse(readFileSync('./databaseConfig.json','utf-8'))
 
 //createConnection(config[0])
-exports.checkDatabase = async() =>{
+module.exports.checkDatabase = async() =>{
   try {
        await sql.connect(config[0])
        const isExist = await sql.query(`IF EXISTS 

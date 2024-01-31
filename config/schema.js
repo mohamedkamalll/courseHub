@@ -1,8 +1,14 @@
 const schema =` 
+CREATE TABLE sessions(
+  sid nvarchar(255) NOT NULL PRIMARY KEY,
+  session nvarchar(max) NOT NULL,
+  expires datetime NOT NULL
+)
 
 CREATE TABLE users( 
 	userId varchar(255) ,
-	firstName varchar(255),
+	gmailId varchar(255),
+  firstName varchar(255),
 	lastName varchar(255),
 	age int,
 	email varchar(255),
@@ -11,6 +17,7 @@ CREATE TABLE users(
 	role varchar(255),
   phone varchar(255),
   username varchar(255),
+  createdOn varchar(255),
 	constraint user_pk primary key (userId),
   constraint [Age cannot be less than 6.] check (age > 6 OR age = 6)
 );

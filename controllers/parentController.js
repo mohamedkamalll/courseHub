@@ -1,5 +1,5 @@
 const user = require('./userController')
-const database = require('../config/databaseConnection');
+const { poolPromise } = require('../config/db')
 const {sendMail} = require('../config/email')
 const { v5, v1 } = require('uuid');
 
@@ -32,11 +32,15 @@ module.exports.addParent = async (req,res) =>{
             City :parentCity ,
             Role:"parent" 
         },req) 
+
+        console.log("doneeee")
       //   console.log("Done",userId)
-          console.log(await req.app.locals.db.query(`INSERT INTO parents (userId) VALUES ('${userId}');`)          )
-          parentId = await req.app.locals.db.query(`select parentId from parents  where userId = '${userId}';`)          
-          //console.log(parent.recordset[0].parentId)
+      const pool = await poolPromise
+      await pool.request().query(`INSERT INTO parents (userId) VALUES ('${userId}');`)     
+          parentId =await pool.request().query(`select parentId from parents  where userId = '${userId}';`)          
+          console.log(parentId.recordset[0].parentId)
           students.forEach(async (element) => {
+            console.log("child num ")
             let child = await user.addChild(element ,parentCity ,fatherName,parentId.recordset[0].parentId);
             sendChildren(students.length,child);         
 
