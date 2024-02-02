@@ -210,9 +210,12 @@ module.exports.forgetPassword = async(req,res) => {
    
 }
 
-module.exports.updatePassword = async(password,email) => {
+module.exports.updatePassword = async(req,res,next) => {
 
     try {
+        if(1 != 2){
+            throw new Error("error handler")
+        }
         const hashedPassword = await bcrypt.hash(password , 10)
         const pool = await poolPromise
         user = await pool.request().query(`UPDATE users
@@ -221,7 +224,7 @@ module.exports.updatePassword = async(password,email) => {
         return user.recordset[0]
             
     } catch (error) {
-        console.log(error)
+        return next(error) 
     }
     
     

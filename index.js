@@ -29,15 +29,22 @@ app.use(cookieParser())
 
 
 //allow frontend to access the back end 
-var corsOptions = {
-  origin: 'http://example.com',
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-}
 const cors = require('cors');
-app.use(cors(corsOptions))
+const corsOptions ={
+    origin:'http://localhost:3000', 
+    credentials:true,            //access-control-allow-credentials:true
+    optionSuccessStatus:200
+}
+app.use(cors(corsOptions));
+
+//Middlewares
+const errorHandler = require('./middleware/errorHandler');
+const myLogger = require('./middleware/myLogger');
+
 
 
 //Create the session
+
 const MSSQLStore = require('connect-mssql-v2');
 const store = new MSSQLStore(config[1],{
   ttl: 1000 * 60 * 60 * 24 * 5,
@@ -56,6 +63,8 @@ app.use(session({
 
 app.use(passport.initialize())
 app.use(passport.session())
+app.use(myLogger)
+
 
 app.use(userRoutes)
 app.use(authRoutes)
@@ -63,7 +72,8 @@ app.use(parentRoutes)
 app.use(instructorRoutes)
 
 
-
+//the middleware for handling errors
+app.use(errorHandler)
 
 const server = app.listen(5000, function () {
   const host = server.address().address

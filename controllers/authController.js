@@ -5,8 +5,8 @@ module.exports.logIn = async (req, res, next) => {
         passport.authenticate('local',function (err, user) {
           req.logIn(user, function (err) { // <-- Log user in
             console.log(user,"loginnnn")
-            if(err) throw Error(err) 
-            return res.redirect('/'); 
+            if(err) console.log(err) 
+            res.status(200).send("heloooooooo"); 
         });
         }
         )(req, res, next);

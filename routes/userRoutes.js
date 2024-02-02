@@ -1,9 +1,10 @@
 const {Router} = require('express');
-const user = require('../controllers/userController')
+const user = require('../controllers/userController');
+const isLoggedIn = require('../middleware/isLoggedIn');
 
 const router = Router()
 
-router.post('/updatePassword',user.updatePassword)
-router.get('/forgetPassword',user.forgetPassword)
+router.get('/updatePassword',isLoggedIn,user.updatePassword)
+router.get('/forgetPassword',isLoggedIn,user.forgetPassword)
 
 module.exports = router
