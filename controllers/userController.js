@@ -18,7 +18,7 @@ let request;
 
 module.exports.createUser= async (user,req,res) => {
     
-    const {FirstName ,LastName ,Age ,Email ,Password ,City ,Role } = user;
+    const {FirstName ,LastName ,birthDate ,Email ,Password ,City ,Role } = user;
 
     try {
         const UserId = v5(Email,v1())
@@ -27,8 +27,8 @@ module.exports.createUser= async (user,req,res) => {
         if(isEmail(Email)){
         const existed = await isExisted(Email,'email')
         if(!existed){
-            query = `INSERT INTO users (userId ,firstName ,lastName ,age ,email ,password ,city ,role)
-            VALUES ('${UserId}','${FirstName}' ,'${LastName}' ,${Age} ,'${Email}' ,'${hashedPassword}' ,'${City}' ,'${Role}');`
+            query = `INSERT INTO users (userId ,firstName ,lastName ,birthDate ,email ,password ,city ,role)
+            VALUES ('${UserId}','${FirstName}' ,'${LastName}' ,${birthDate} ,'${Email}' ,'${hashedPassword}' ,'${City}' ,'${Role}');`
             //throwQuery(query)
             const pool = await poolPromise
             await pool.request().query(query)
@@ -49,7 +49,7 @@ module.exports.createUser= async (user,req,res) => {
 
 module.exports.addChild = async (child, city ,fatherName,parentId)=>{
    // const bcrybt = require('bcrypt');
-    const {name , age } = child;   
+    const {name , birthDate } = child;   
     let username = await sn.generateOne(name + fatherName)
     const Password = await generator.generate({
         length: 10,
@@ -64,11 +64,11 @@ module.exports.addChild = async (child, city ,fatherName,parentId)=>{
                 username = await createUniqueUsername(name,fatherName)
             } 
             let UserId = v5(name,v1())
-            query = `INSERT INTO users (userId ,firstName ,lastName ,age ,password ,city ,role ,username)
-            VALUES ('${UserId}','${name}' ,'${fatherName}' ,${age} ,'${hashedPassword}' ,'${city}' ,'student', '${username}');`
+            query = `INSERT INTO users (userId ,firstName ,lastName ,birthDate ,password ,city ,role ,username)
+            VALUES ('${UserId}','${name}' ,'${fatherName}' ,'${birthDate}' ,'${hashedPassword}' ,'${city}' ,'student', '${username}');`
             const pool = await poolPromise
             await pool.request().query(query)
-            console.log(name ,age ,city,fatherName,username,UserId,parentId);
+            console.log(name ,city,fatherName,username,UserId,parentId);
             await pool.request().query(`INSERT INTO students (userId,parentId) VALUES ('${UserId}',${parentId});`)
             return {"username" :username  , "password" : Password};        
     } catch (error) {
@@ -114,7 +114,7 @@ module.exports.getUser = async(identifier,req) => {
     }else{
         user = await pool.request().query(`SELECT * FROM users where username = '${identifier}'`)        
     }
-    return user.recordset[0]
+    return user
 }
 
 module.exports.getUserById = async(id,req) => {  
@@ -151,13 +151,13 @@ user try to auth the account with gmail  email = user.email  gmailid= null
                 return user.recordset[0].userId
             }
         }  else{
-            throw Error("User isnt existed")
+            throw new Error("User isnt existed")
         }    
     } catch (error) {
-        console.log(error)
+        throw new Error(error)
     }
     
-    return null;
+   // return null;
     
       
     //return user.recordset[0]

@@ -2,31 +2,27 @@ const localStrategy = require('passport-local').Strategy
 const {getUser , getUserById,createAndGetGmailId} = require("../controllers/userController")
 const passport = require('passport');
 const bcrypt = require('bcrypt');
-var GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
+var GoogleStrategy = require('passport-google-oauth2').Strategy;
 
 
 function intialize(){
-    let request 
-    
-    const authenticateUser = async (req, email , password , done) =>{
-        request = req
-        console.log(req.body, "requestttttttttt")
-        console.log(email,password)
-        let user =await  getUser(email,req)
-        console.log(user,"userr")
-        if (user == null){
-            console.log('invalid user name')
-            return done(null,false,{message: 'no user with that email'})
-
-        }
-
-
+    let request     
+    const authenticateUser = async (req ,email ,password ,done ) =>{
+        request = req;
+        console.log(req.body, "request.body");
+        console.log(email,password);
         try {
+            let user = await getUser(email,req);
+            user = user.recordset[0]
+            console.log(user,"userr");
+            if (user == null){
+                console.log('invalid user name')
+                return done(new Error("no user with that email"),false)
+            }
             if(await bcrypt.compare(password,user.password)){
                 return done(null,user)
             }else{
-                console.log('password incorrect')
-                return done(null , false, {message : 'password incorrect'})
+                return done(new Error('password incorrect') , false)
             }
         } catch (error) {
             return done(error)
@@ -47,36 +43,64 @@ function intialize(){
         request = req
         try {
             user = await createAndGetGmailId(profile.email,profile.id,req) 
-            console.log(user,"from passport . use")         
+            //console.log(user,"from passport . use")         
             if(user){
                 done(null, user);
             }  else{
-                console.log('no user with that email')
-                return done(null,false,{message: 'no user with that email'})
+                
+                return done(new Error('no user with that email'),false)
             }
         } catch (error) {
-            console.log(error)
+            return done(error)
         }
             //console.log(profile,"profilee")
     
       }
     ));
-    passport.serializeUser((user,done) =>{ 
-        console.log("serialize ", user.userId)
-        done(null,user.userId)
-      })
-    passport.deserializeUser(async function (id,done){
-        console.log("de serialize ", id)
-        try {
-            const deserializeUserr = await getUserById(id,request)
-            if(!deserializeUserr) throw Error("User not found")
-            done(null,deserializeUserr) 
-                         
-        } catch (error) {
-            console.log(error)
-            done(error,null)
-        }
-    })   
+    
+    try {
+        passport.serializeUser((user,done) =>{ 
+            console.log("serialize ", user.userId)
+            done(null,user.userId)
+          })
+        passport.deserializeUser(async function (id,done){
+            console.log("de serialize ", id)
+            try {
+                const deserializeUserr = await getUserById(id,request)
+
+                if(!deserializeUserr) {throw Error("User not found")}else{
+                    const {userId,
+                        firstName,
+                        lastName,
+                        birthDate,
+                        email,
+                        city,
+                        role,
+                        phone,
+                        username
+                      } = deserializeUserr
+                      User = {
+                        userId,
+                        firstName,
+                        lastName,
+                        birthDate,
+                        email,
+                        city,
+                        role,
+                        phone,
+                        username}
+                }
+                done(null,User) 
+                             
+            } catch (error) {
+                console.log(error,"error is hereeeeeeeeee")
+                done(error,null)
+            }
+        })       
+    } catch (error) {
+        console.log(error,"erroris hereeeee")
+    }
+    
 }
 
 intialize()

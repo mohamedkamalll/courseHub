@@ -10,7 +10,7 @@ CREATE TABLE users(
 	gmailId varchar(255),
   firstName varchar(255),
 	lastName varchar(255),
-	age int,
+	birthDate varchar(255),
 	email varchar(255),
 	password varchar(255),
 	city varchar(255),
@@ -18,9 +18,8 @@ CREATE TABLE users(
   phone varchar(255),
   username varchar(255),
   createdOn varchar(255),
-	constraint user_pk primary key (userId),
-  constraint [Age cannot be less than 6.] check (age > 6 OR age = 6)
-);
+	constraint user_pk primary key (userId)
+  );
 
 CREATE TABLE parents(
   parentId int IDENTITY(1,1),

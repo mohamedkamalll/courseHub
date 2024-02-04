@@ -11,6 +11,10 @@ const parentRoutes = require('./routes/parentRoutes');
 const authRoutes = require('./routes/authRoutes')
 const app = express()
 
+//Middlewares
+const errorHandler = require('./middleware/errorHandler');
+const myLogger = require('./middleware/myLogger');
+const deviceDetector = require('./middleware/deviceDetector');
 
 //create database and connection pool
 //const appPool = require('./config/database').excute()
@@ -37,9 +41,8 @@ const corsOptions ={
 }
 app.use(cors(corsOptions));
 
-//Middlewares
-const errorHandler = require('./middleware/errorHandler');
-const myLogger = require('./middleware/myLogger');
+app.use(deviceDetector)
+
 
 
 
@@ -47,12 +50,21 @@ const myLogger = require('./middleware/myLogger');
 
 const MSSQLStore = require('connect-mssql-v2');
 const store = new MSSQLStore(config[1],{
-  ttl: 1000 * 60 * 60 * 24 * 5,
-  autoRemove: true,
-  autoRemoveInterval: 1000 * 60 * 60,
+ // ttl: 1000 * 60 * 60 * 24 * 5,
+ ttl: 1000* 60 * 2 ,
+ autoRemove: true,
+//  autoRemoveInterval: 1000 * 60 * 60,
+  autoRemoveInterval: 1000 * 60 * 10,
   autoRemoveCallback: () => console.log("auto remove called"),
   useUTC: true
 });
+const s = async ()=>{
+  //await(store.destroyExpired(()=>{console.log("expired sessions destroyed")}))
+  //console.log(await store.get('pw9LICHScdNF46gTXwNVtGNI4T_x5qSR',(err,session)=>{console.log(session)}))
+
+}
+s()
+
 app.use(session({
   store: store,
   secret : "Cat",
@@ -72,15 +84,22 @@ app.use(parentRoutes)
 app.use(instructorRoutes)
 
 
+
+
 //the middleware for handling errors
 app.use(errorHandler)
 
-const server = app.listen(5000, function () {
+//test moment
+const moment = require("moment")
+
+console.log(moment("2015-12-10", "YYYY-MM-DD").fromNow(true).replace(/[^0-9]/g, ""))
+
+ const server = app.listen(5000, function () {
   const host = server.address().address
   const port = server.address().port
   console.log('app listening at ', port)
-})
-
+  
+ })
 
 
 

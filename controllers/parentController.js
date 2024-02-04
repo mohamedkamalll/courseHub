@@ -19,14 +19,14 @@ const { v5, v1 } = require('uuid');
 let children = []
 
 
-module.exports.addParent = async (req,res) =>{
+module.exports.addParent = async (req,res,next) =>{
   const {parentFirstName ,parentLastName ,parentEmail ,parentPassword ,parentCity ,fatherName ,students } = req.body;
     console.log(req.body)
     try {
          const userId = await user.createUser({
             FirstName : parentFirstName ,
             LastName :parentLastName ,
-            Age : null,
+            birthDate : null,
             Email: parentEmail ,
             Password :parentPassword,
             City :parentCity ,
@@ -46,7 +46,7 @@ module.exports.addParent = async (req,res) =>{
 
           })          
         } catch (error) {
-         console.log(error.message)
+         next(error)
      }  
 
 }
