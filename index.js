@@ -70,6 +70,11 @@ app.use(session({
   secret : "Cat",
   resave: false,
   saveUninitialized: false,
+  cookie:{
+   // secure:false,
+    expires:new Date(Date.now() + 1000 * 60 * 60 * 24 * 5),
+    httpOnly:true
+  }
 }))
 
 

@@ -22,25 +22,8 @@ module.exports.logIn = async (req, res, next) => {
             if(err){
              return next(err) 
             } else{
-              const {firstName,
-                lastName,
-                birthDate,
-                email,
-                city,
-                role,
-                phone,
-                username
-              } = user
-              User = {
-                firstName,
-                lastName,
-                birthDate,
-                email,
-                city,
-                role,
-                phone,
-                username}
-            
+              const {firstName,lastName,birthDate,email,city,role,phone,username} = user
+              User = {firstName,lastName,birthDate,email,city,role,phone,username}               
               res.status(200).send(User); 
             }
         });

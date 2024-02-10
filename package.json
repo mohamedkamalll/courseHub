@@ -31,6 +31,7 @@
     "oauth": "^0.10.0",
     "passport": "^0.7.0",
     "passport-google-oauth2": "^0.2.0",
+    "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "redis": "^4.6.12",
     "request": "^2.88.2",
