@@ -1,7 +1,7 @@
 const user = require('./userController')
-const { poolPromise } = require('../config/db')
+const {poolPromise} = require('../config/db')
 const {sendMail} = require('../config/email')
-const { v5, v1 } = require('uuid');
+const {v5, v1} = require('uuid');
 
 /*
 {
@@ -19,41 +19,46 @@ const { v5, v1 } = require('uuid');
 let children = []
 
 
-module.exports.addParent = async (req,res,next) =>{
-  const {parentFirstName ,parentLastName ,parentEmail ,parentPassword ,parentCity ,fatherName ,students } = req.body;
-    console.log(req.body)
-    try {
-         const userId = await user.createUser({
-            FirstName : parentFirstName ,
-            LastName :parentLastName ,
-            birthDate : null,
-            Email: parentEmail ,
-            Password :parentPassword,
-            City :parentCity ,
-            Role:"parent" 
-        },req) 
+module.exports.addParent = async (req, res, next) =>
+{
+  const {parentFirstName, parentLastName, parentEmail, parentPassword, parentCity, fatherName, students} = req.body;
+  console.log(req.body)
+  try
+  {
+    const userId = await user.createUser({
+      FirstName: parentFirstName,
+      LastName: parentLastName,
+      birthDate: null,
+      Email: parentEmail,
+      Password: parentPassword,
+      City: parentCity,
+      Role: "parent"
+    }, req)
 
-        console.log("doneeee")
-      //   console.log("Done",userId)
-      const pool = await poolPromise
-      await pool.request().query(`INSERT INTO parents (userId) VALUES ('${userId}');`)     
-          parentId =await pool.request().query(`select parentId from parents  where userId = '${userId}';`)          
-          console.log(parentId.recordset[0].parentId)
-          students.forEach(async (element) => {
-            console.log("child num ")
-            let child = await user.addChild(element ,parentCity ,fatherName,parentId.recordset[0].parentId);
-            sendChildren(students.length,child);         
+    console.log("doneeee")
+    //   console.log("Done",userId)
+    const pool = await poolPromise
+    await pool.request().query(`INSERT INTO parents (userId) VALUES ('${userId}');`)
+    parentId = await pool.request().query(`select parentId from parents  where userId = '${userId}';`)
+    console.log(parentId.recordset[0].parentId)
+    students.forEach(async (element) =>
+    {
+      console.log("child num ")
+      let child = await user.addChild(element, parentCity, fatherName, parentId.recordset[0].parentId);
+      sendChildren(students.length, child);
 
-          })          
-        } catch (error) {
-         next(error)
-     }  
+    })
+  } catch (error)
+  {
+    next(error)
+  }
 
 }
 
 let body = "<table  style='border:1px solid #ccc;text-align: left;border-collapse: collapse;width: 100%;'> <tbody>";
 
-async function sendChildren(len ,child){
+async function sendChildren(len, child)
+{
   children.push(child)
   body += `<tr style='border: 1px solid #ccc;text-align: left;padding: 15px;'>
   <td style='border: 1px solid #ccc;text-align: left;padding: 15px;width:200px;background-color:#ddd;'>Email : </td>
@@ -63,8 +68,9 @@ async function sendChildren(len ,child){
   <td style='border: 1px solid #ccc;text-align: left;padding: 15px;width:200px;background-color:#ddd;'>Password : </td>
   <td style='border: 1px solid #ccc;text-align: left;padding: 15px;'>  ${child.password} </td>
   </tr>`;
-  if(children.length == len){
-    console.log(children,"doneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+  if (children.length == len)
+  {
+    console.log(children, "doneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
     body += "</tbody></table> ";
     //await sendMail("Your children accounts",body)
   }
