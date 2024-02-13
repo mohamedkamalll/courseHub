@@ -14,6 +14,23 @@ const { poolPromise } = require('../config/db')
 const {sendMail} = require('../config/email')
 
 
+module.exports.checkAuth= async (req,res)=>{
+    try {
+        if(await req.isAuthenticated())
+        {
+            res.status(200).send(true);        
+        }
+        else
+        {
+        // return unauthorized user
+            res.status(401).send(false);
+        }    
+    } catch (error) {
+       return next(error)
+    }
+
+}
+
 let request;
 
 module.exports.createUser= async (user,req,res) => {
