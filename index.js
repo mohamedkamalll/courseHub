@@ -58,12 +58,7 @@ const store = new MSSQLStore(config[1],{
   autoRemoveCallback: () => console.log("auto remove called"),
   useUTC: true
 });
-const s = async ()=>{
-  //await(store.destroyExpired(()=>{console.log("expired sessions destroyed")}))
-  //console.log(await store.get('pw9LICHScdNF46gTXwNVtGNI4T_x5qSR',(err,session)=>{console.log(session)}))
 
-}
-s()
 
 app.use(session({
   store: store,
