@@ -48,6 +48,8 @@ module.exports.addParent = async (req, res, next) =>
       sendChildren(students.length, child);
 
     })
+    return res.status(200).send("Done");
+
   } catch (error)
   {
     next(error)

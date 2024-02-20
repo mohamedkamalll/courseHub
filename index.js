@@ -1,5 +1,5 @@
 const express = require('express');
-const cookieParser =require('cookie-parser')
+const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const passport = require('passport');
 
@@ -20,8 +20,9 @@ const deviceDetector = require('./middleware/deviceDetector');
 //const appPool = require('./config/database').excute()
 const config = require('./config/databaseConfig.json')
 const createDatabase = require('./config/createDatabase')
-async function testConnection(){
-  await createDatabase.checkDatabase()   
+async function testConnection()
+{
+  await createDatabase.checkDatabase()
 }
 testConnection()
 
@@ -34,10 +35,10 @@ app.use(cookieParser())
 
 //allow frontend to access the back end 
 const cors = require('cors');
-const corsOptions ={
-    origin:'http://localhost:3000', 
-    credentials:true,            //access-control-allow-credentials:true
-    optionSuccessStatus:200
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true,            //access-control-allow-credentials:true
+  optionSuccessStatus: 200
 }
 app.use(cors(corsOptions));
 
@@ -49,11 +50,11 @@ app.use(deviceDetector)
 //Create the session
 
 const MSSQLStore = require('connect-mssql-v2');
-const store = new MSSQLStore(config[1],{
- // ttl: 1000 * 60 * 60 * 24 * 5,
- ttl: 1000* 60 * 2 ,
- autoRemove: true,
-//  autoRemoveInterval: 1000 * 60 * 60,
+const store = new MSSQLStore(config[1], {
+  // ttl: 1000 * 60 * 60 * 24 * 5,
+  ttl: 1000 * 60 * 2,
+  autoRemove: true,
+  //  autoRemoveInterval: 1000 * 60 * 60,
   autoRemoveInterval: 1000 * 60 * 10,
   autoRemoveCallback: () => console.log("auto remove called"),
   useUTC: true
@@ -62,13 +63,13 @@ const store = new MSSQLStore(config[1],{
 
 app.use(session({
   store: store,
-  secret : "Cat",
+  secret: "Cat",
   resave: false,
   saveUninitialized: false,
-  cookie:{
-   // secure:false,
-    expires:new Date(Date.now() + 1000 * 60 * 60 * 24 * 5),
-    httpOnly:true
+  cookie: {
+    // secure:false,
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 5),
+    httpOnly: true
   }
 }))
 
@@ -94,12 +95,13 @@ const moment = require("moment")
 
 console.log(moment("2015-12-10", "YYYY-MM-DD").fromNow(true).replace(/[^0-9]/g, ""))
 
- const server = app.listen(5000, function () {
+const server = app.listen(5000, function ()
+{
   const host = server.address().address
   const port = server.address().port
   console.log('app listening at ', port)
-  
- })
+
+})
 
 
 
