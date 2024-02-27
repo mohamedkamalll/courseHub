@@ -1,3 +1,4 @@
+const bcrybt = require('bcrypt');
 const {v5, v1} = require('uuid');
 //const database = require('../config/databaseConnection');
 const {isEmail} = require('validator');
@@ -10,12 +11,11 @@ import("sernam").then(({default: sernam}) =>
     }
     sn = sernam(options)
 })
-const bcrybt = require('bcrypt');
 const {poolPromise} = require('../config/db')
 const {sendMail} = require('../config/email')
 
 
-module.exports.checkAuth = async (req, res) =>
+module.exports.checkAuth = async (req, res,next) =>
 {
     try
     {
@@ -35,13 +35,10 @@ module.exports.checkAuth = async (req, res) =>
 
 }
 
-let request;
 
-module.exports.createUser = async (user, req, res) =>
+module.exports.createUser = async (user, req, res, next) =>
 {
-
     const {FirstName, LastName, birthDate, Email, Password, City, Role} = user;
-
     try
     {
         const UserId = v5(Email, v1())
@@ -54,7 +51,6 @@ module.exports.createUser = async (user, req, res) =>
             {
                 query = `INSERT INTO users (userId ,firstName ,lastName ,birthDate ,email ,password ,city ,role)
             VALUES ('${UserId}','${FirstName}' ,'${LastName}' ,${birthDate} ,'${Email}' ,'${hashedPassword}' ,'${City}' ,'${Role}');`
-                //throwQuery(query)
                 const pool = await poolPromise
                 await pool.request().query(query)
                 return UserId;
@@ -77,7 +73,6 @@ module.exports.createUser = async (user, req, res) =>
 
 module.exports.addChild = async (child, city, fatherName, parentId) =>
 {
-    // const bcrybt = require('bcrypt');
     const {name, birthDate} = child;
     let username = await sn.generateOne(name + fatherName)
     const Password = await generator.generate({
@@ -104,7 +99,7 @@ module.exports.addChild = async (child, city, fatherName, parentId) =>
         return {"username": username, "password": Password};
     } catch (error)
     {
-        console.log(error)
+        throw new  Error(error.message)
     }
 
 }
@@ -124,7 +119,7 @@ async function createUniqueUsername(name, fatherName)
         }
     } catch (error)
     {
-        console.log(error)
+        throw new Error(error.message)
     }
 
 }
@@ -146,7 +141,6 @@ async function isExisted(Email, type)
 
 module.exports.getUser = async (identifier, req) =>
 {
-    request = req
     const pool = await poolPromise
     if (isEmail(identifier))
     {
@@ -160,9 +154,7 @@ module.exports.getUser = async (identifier, req) =>
 }
 
 module.exports.getUserById = async (id, req) =>
-{
-    //user = await pool.request().query(`SELECT * FROM users where userId = '${id}'`)  
-    // console.log(user.recordset[0],"get user by id is caled")      
+{   
     const pool = await poolPromise
     const user = await pool.request().query(`SELECT * FROM users where userId = '${id}'`)
     return user.recordset[0]
@@ -276,13 +268,16 @@ module.exports.updatePassword = async (req, res, next) =>
 {
     try
     {
-       
-        const hashedPassword = await bcrypt.hash(password, 10)
+        const {password} = req.body
+        const identifierName = req.user.email ? "email" : "username";
+        const identifier = req.user.email ? req.user.email : req.user.username;
+        console.log(req.user,password,identifierName,identifier)
+        const hashedPassword = await bcrybt.hash(password, 10)
         const pool = await poolPromise
         user = await pool.request().query(`UPDATE users
         SET password = '${hashedPassword}'
-        WHERE email = '${email}';`)
-        return user.recordset[0]
+        WHERE ${identifierName} = '${identifier}';`)
+        return res.status(200).send("Done")
 
     } catch (error)
     {
@@ -296,9 +291,7 @@ module.exports.getCurrentUser = async (req, res, next) =>
 {
     try
     {
-       
         return res.status(200).send(req.user); 
-
     } catch (error)
     {
         return next(error)

@@ -63,5 +63,4 @@ module.exports.logout = (req,res)=>{
       if(err) return next(err)
       return res.status(200).send("logged out seccessfully"); 
     });  
-
 }
