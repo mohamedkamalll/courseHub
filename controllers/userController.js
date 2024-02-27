@@ -60,16 +60,16 @@ module.exports.createUser = async (user, req, res) =>
                 return UserId;
             } else
             {
-                throw Error("Email is already existed")
+                 throw new Error("Email is already existed")
             }
 
         } else
         {
-            throw Error("Email is not valid")
+            throw new Error("Email is not valid")
         }
     } catch (error)
     {
-        console.log(error.message)
+       throw new Error(error.message)
     }
 
 }
@@ -133,8 +133,7 @@ async function isExisted(Email, type)
 {
     const pool = await poolPromise
     const Existed = await pool.request().query(`SELECT * FROM users where ${type} = '${Email}'`)
-
-    console.log(Existed, Existed.rowsAffected, Email, type)
+    //console.log(Existed, Existed.rowsAffected, Email, type)
     if (Existed.rowsAffected == 1)
     {
         return true
@@ -275,19 +274,30 @@ module.exports.forgetPassword = async (req, res, next) =>
 
 module.exports.updatePassword = async (req, res, next) =>
 {
-
     try
     {
-        if (1 != 2)
-        {
-            throw new Error("error handler")
-        }
+       
         const hashedPassword = await bcrypt.hash(password, 10)
         const pool = await poolPromise
         user = await pool.request().query(`UPDATE users
         SET password = '${hashedPassword}'
         WHERE email = '${email}';`)
         return user.recordset[0]
+
+    } catch (error)
+    {
+        return next(error)
+    }
+
+
+}
+
+module.exports.getCurrentUser = async (req, res, next) =>
+{
+    try
+    {
+       
+        return res.status(200).send(req.user); 
 
     } catch (error)
     {

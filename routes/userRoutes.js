@@ -7,6 +7,7 @@ const router = Router()
 
 router.get('/isLoggedIn', user.checkAuth)
 router.get('/updatePassword', isLoggedIn, user.updatePassword)
+router.get('/getCurrentUser',isLoggedIn,user.getCurrentUser)
 router.post('/forgetPassword', user.forgetPassword)
 
 module.exports = router
