@@ -98,7 +98,7 @@ function intialize(){
         passport.deserializeUser(async function (id,done){
             console.log("de serialize ", id)
             try {
-                const deserializeUserr = await getUserById(id,request)
+                const deserializeUserr = await getUserById(id)
 
                 if(!deserializeUserr) {throw Error("User not found")}else{
                     const {userId,
@@ -109,7 +109,8 @@ function intialize(){
                         city,
                         role,
                         phone,
-                        username
+                        username,
+                        activated
                       } = deserializeUserr
                       User = {
                         userId,
@@ -120,7 +121,9 @@ function intialize(){
                         city,
                         role,
                         phone,
-                        username}
+                        username,
+                        activated
+                    }
                 }
                 done(null,User) 
                              

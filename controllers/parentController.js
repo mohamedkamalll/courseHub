@@ -32,7 +32,8 @@ module.exports.addParent = async (req, res, next) =>
       Email: parentEmail,
       Password: parentPassword,
       City: parentCity,
-      Role: "parent"
+      Role: "parent",
+      activated:1
     }, req)
 
     console.log("doneeee")

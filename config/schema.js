@@ -18,6 +18,7 @@ CREATE TABLE users(
   phone varchar(255),
   username varchar(255),
   createdOn varchar(255),
+  activated int,
 	constraint user_pk primary key (userId)
   );
 

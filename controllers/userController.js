@@ -13,8 +13,7 @@ import("sernam").then(({default: sernam}) =>
 })
 const {poolPromise} = require('../config/db')
 const {sendMail} = require('../config/email')
-
-
+const moment = require('moment')
 module.exports.checkAuth = async (req, res,next) =>
 {
     try
@@ -38,7 +37,8 @@ module.exports.checkAuth = async (req, res,next) =>
 
 module.exports.createUser = async (user, req, res, next) =>
 {
-    const {FirstName, LastName, birthDate, Email, Password, City, Role} = user;
+    const {FirstName, LastName, birthDate, Email, Password, City, Role,activated} = user;
+    
     try
     {
         const UserId = v5(Email, v1())
@@ -49,8 +49,8 @@ module.exports.createUser = async (user, req, res, next) =>
             const existed = await isExisted(Email, 'email')
             if (!existed)
             {
-                query = `INSERT INTO users (userId ,firstName ,lastName ,birthDate ,email ,password ,city ,role)
-            VALUES ('${UserId}','${FirstName}' ,'${LastName}' ,${birthDate} ,'${Email}' ,'${hashedPassword}' ,'${City}' ,'${Role}');`
+                query = `INSERT INTO users (userId ,firstName ,lastName ,birthDate ,email ,password ,city ,role,activated,createdOn)
+            VALUES ('${UserId}','${FirstName}' ,'${LastName}' ,'${birthDate}' ,'${Email}' ,'${hashedPassword}' ,'${City}' ,'${Role}','${activated}','${moment().format()}');`
                 const pool = await poolPromise
                 await pool.request().query(query)
                 return UserId;
@@ -90,8 +90,8 @@ module.exports.addChild = async (child, city, fatherName, parentId) =>
             username = await createUniqueUsername(name, fatherName)
         }
         let UserId = v5(name, v1())
-        query = `INSERT INTO users (userId ,firstName ,lastName ,birthDate ,password ,city ,role ,username)
-            VALUES ('${UserId}','${name}' ,'${fatherName}' ,'${birthDate}' ,'${hashedPassword}' ,'${city}' ,'student', '${username}');`
+        query = `INSERT INTO users (userId ,firstName ,lastName ,birthDate ,password ,city ,role ,username,activated)
+            VALUES ('${UserId}','${name}' ,'${fatherName}' ,'${birthDate}' ,'${hashedPassword}' ,'${city}' ,'student', '${username}', 1);`
         const pool = await poolPromise
         await pool.request().query(query)
         console.log(name, city, fatherName, username, UserId, parentId);
@@ -153,7 +153,7 @@ module.exports.getUser = async (identifier, req) =>
     return user
 }
 
-module.exports.getUserById = async (id, req) =>
+module.exports.getUserById = async (id) =>
 {   
     const pool = await poolPromise
     const user = await pool.request().query(`SELECT * FROM users where userId = '${id}'`)
@@ -200,11 +200,6 @@ user try to auth the account with gmail  email = user.email  gmailid= null
     {
         throw new Error(error)
     }
-
-    // return null;
-
-
-    //return user.recordset[0]
 }
 
 module.exports.forgetPassword = async (req, res, next) =>
@@ -278,13 +273,10 @@ module.exports.updatePassword = async (req, res, next) =>
         SET password = '${hashedPassword}'
         WHERE ${identifierName} = '${identifier}';`)
         return res.status(200).send("Done")
-
     } catch (error)
     {
         return next(error)
     }
-
-
 }
 
 module.exports.getCurrentUser = async (req, res, next) =>
@@ -296,6 +288,20 @@ module.exports.getCurrentUser = async (req, res, next) =>
     {
         return next(error)
     }
+}
 
 
+module.exports.activateUser = async (req,res,next) => {
+    const {email} = req.body;
+    try
+    {
+        const pool = await poolPromise
+        user = await pool.request().query(`UPDATE users
+        SET activated = ${1}
+        WHERE email = '${email}';`)
+        return res.status(200).send("User Activated")
+    } catch (error)
+    {
+        return next(error)
+    }   
 }

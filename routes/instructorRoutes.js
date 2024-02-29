@@ -1,9 +1,10 @@
 const {Router} = require('express')
 const Instructor = require('../controllers/instructorController')
+const user = require('../controllers/userController')
 const router = Router()
 
 router.post('/addInstructor',Instructor.addInstructor)
-
+router.post('/activateUser',user.activateUser)
 module.exports = router;
 
 /*

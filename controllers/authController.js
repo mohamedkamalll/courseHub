@@ -22,8 +22,8 @@ module.exports.logIn = async (req, res, next) => {
             if(err){
              return next(err) 
             } else{
-              const {firstName,lastName,birthDate,email,city,role,phone,username} = user
-              User = {firstName,lastName,birthDate,email,city,role,phone,username}               
+              const {firstName,lastName,birthDate,email,city,role,phone,username,activated} = user
+              User = {firstName,lastName,birthDate,email,city,role,phone,username,activated}               
               return res.status(200).send(User); 
             }
         });
@@ -47,8 +47,8 @@ module.exports.googleAuthCallBack = async (req, res, next) => {
       if(err){
        return next(err) 
       } else{
-          const {firstName,lastName,birthDate,email,city,role,phone,username} = user
-          User = {firstName,lastName,birthDate,email,city,role,phone,username}               
+          const {firstName,lastName,birthDate,email,city,role,phone,username,activated} = user
+          User = {firstName,lastName,birthDate,email,city,role,phone,username,activated}               
           return res.status(200).send(User); 
       }
   });
