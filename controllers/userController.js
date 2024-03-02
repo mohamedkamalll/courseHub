@@ -37,20 +37,20 @@ module.exports.checkAuth = async (req, res,next) =>
 
 module.exports.createUser = async (user, req, res, next) =>
 {
-    const {FirstName, LastName, birthDate, Email, Password, City, Role,activated} = user;
+    const {firstName, lastName, birthDate, email, password, city, Role,activated} = user;
     
     try
     {
-        const UserId = v5(Email, v1())
-        const hashedPassword = await bcrybt.hash(Password, 10)
+        const UserId = v5(email, v1())
+        const hashedPassword = await bcrybt.hash(password, 10)
 
-        if (isEmail(Email))
+        if (isEmail(email))
         {
-            const existed = await isExisted(Email, 'email')
+            const existed = await isExisted(email, 'email')
             if (!existed)
             {
                 query = `INSERT INTO users (userId ,firstName ,lastName ,birthDate ,email ,password ,city ,role,activated,createdOn)
-            VALUES ('${UserId}','${FirstName}' ,'${LastName}' ,'${birthDate}' ,'${Email}' ,'${hashedPassword}' ,'${City}' ,'${Role}','${activated}','${moment().format()}');`
+            VALUES ('${UserId}','${firstName}' ,'${lastName}' ,'${birthDate}' ,'${email}' ,'${hashedPassword}' ,'${city}' ,'${Role}','${activated}','${moment().format()}');`
                 const pool = await poolPromise
                 await pool.request().query(query)
                 return UserId;
