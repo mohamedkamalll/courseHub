@@ -2,7 +2,7 @@ const user = require('./userController')
 const { poolPromise } = require('../config/db')
 
 module.exports.addInstructor = async (req,res,next)=>{
-    const {FirstName ,LastName ,birthDate ,Email ,Password ,City  } = req.body;
+    const {firstName ,lastName ,birthDate ,email ,password ,city  } = req.body;
     try {
         const userId = await user.createUser({FirstName ,LastName ,birthDate ,Email ,Password ,City ,Role:"instructor",activated:0},req) 
         console.log("Done",userId)
