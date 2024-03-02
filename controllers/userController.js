@@ -187,10 +187,10 @@ user try to auth the account with gmail  email = user.email  gmailid= null
                 }
             } else
             {
-                user = await pool.request().query(`UPDATE users
+                userAfterCreate = await pool.request().query(`UPDATE users
                 SET gmailId = '${gmailId}'
                 WHERE email = '${email}';`)
-                return user.recordset[0].userId
+                return user.recordset[0]
             }
         } else
         {

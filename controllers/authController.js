@@ -9,7 +9,8 @@ let User = {
   city: null,
   role: null,
   phone: null,
-  username: null
+  username: null,
+  activated:null
 }
 
 module.exports.logIn = async (req, res, next) => {
