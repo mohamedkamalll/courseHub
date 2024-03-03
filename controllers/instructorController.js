@@ -4,7 +4,7 @@ const { poolPromise } = require('../config/db')
 module.exports.addInstructor = async (req,res,next)=>{
     const {firstName ,lastName ,birthDate ,email ,password ,city  } = req.body;
     try {
-        const userId = await user.createUser({firstName ,lastName ,birthDate ,email ,password ,city ,Role:"instructor",activated:0},req) 
+        const userId = await user.createUser({firstName ,lastName ,birthDate ,email ,password ,city ,role:'instructor',activated:0},req) 
         console.log("Done",userId)
         if(userId){
              query = `INSERT INTO instructors (userId) VALUES ('${userId}');`
@@ -18,7 +18,4 @@ module.exports.addInstructor = async (req,res,next)=>{
 }
 
 //16754
-<<<<<<< HEAD
 //4983
-=======
->>>>>>> c5c7b3b747ee871464e83c3f5153b2d6f780626f

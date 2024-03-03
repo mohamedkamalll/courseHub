@@ -37,8 +37,8 @@ module.exports.checkAuth = async (req, res,next) =>
 
 module.exports.createUser = async (user, req, res, next) =>
 {
-    const {firstName, lastName, birthDate, email, password, city, Role,activated} = user;
-    
+    const {firstName, lastName, birthDate, email, password, city, role,activated} = user;
+    console.log(role,"roleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
     try
     {
         const UserId = v5(email, v1())
@@ -50,7 +50,7 @@ module.exports.createUser = async (user, req, res, next) =>
             if (!existed)
             {
                 query = `INSERT INTO users (userId ,firstName ,lastName ,birthDate ,email ,password ,city ,role,activated,createdOn)
-            VALUES ('${UserId}','${firstName}' ,'${lastName}' ,'${birthDate}' ,'${email}' ,'${hashedPassword}' ,'${city}' ,'${Role}','${activated}','${moment().format()}');`
+            VALUES ('${UserId}','${firstName}' ,'${lastName}' ,'${birthDate}' ,'${email}' ,'${hashedPassword}' ,'${city}' ,'${role}','${activated}','${moment().format()}');`
                 const pool = await poolPromise
                 await pool.request().query(query)
                 return UserId;

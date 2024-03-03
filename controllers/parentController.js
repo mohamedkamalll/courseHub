@@ -26,13 +26,13 @@ module.exports.addParent = async (req, res, next) =>
   try
   {
     const userId = await user.createUser({
-      FirstName: parentFirstName,
-      LastName: parentLastName,
+      firstName: parentFirstName,
+      lastName: parentLastName,
       birthDate: null,
-      Email: parentEmail,
-      Password: parentPassword,
-      City: parentCity,
-      Role: "parent",
+      email: parentEmail,
+      password: parentPassword,
+      city: parentCity,
+      role: 'parent',
       activated:1
     }, req)
 
