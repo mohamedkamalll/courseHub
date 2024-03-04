@@ -38,27 +38,31 @@ const cors = require('cors');
 const corsOptions = {
   origin: 'http://localhost:3000',
   credentials: true,            //access-control-allow-credentials:true
-  optionSuccessStatus: 200
+  optionSuccessStatus: 200,
+
 }
 app.use(cors(corsOptions));
 
-app.use(deviceDetector)
-
+//app.use(deviceDetector)
 
 
 
 //Create the session
 
 const MSSQLStore = require('connect-mssql-v2');
-const store = new MSSQLStore(config[1], {
-  // ttl: 1000 * 60 * 60 * 24 * 5,
-  ttl: 1000 * 60 * 2,
+  const store =  new MSSQLStore(config[1],{
+ ttl: 1000 * 60 * 60 * 24 * 5,
+ // ttl: 1000 * 60 * 2,
   autoRemove: true,
   //  autoRemoveInterval: 1000 * 60 * 60,
   autoRemoveInterval: 1000 * 60 * 10,
   autoRemoveCallback: () => console.log("auto remove called"),
-  useUTC: true
-});
+  useUTC: true,
+  })
+store.destroyExpired(()=>{
+  console.log("session store started")
+})
+
 
 
 app.use(session({
@@ -70,8 +74,10 @@ app.use(session({
     // secure:false,
     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 5),
     httpOnly: true
-  }
+  },
 }))
+
+
 
 
 app.use(passport.initialize())

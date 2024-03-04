@@ -28,7 +28,7 @@ const deviceDetector = async(req,res,next)=>{
             var ipAddress = req.connection.remoteAddress;
             return ipAddress
         }
-        console.log(req.connection.remoteAddress,"hello")
+        //console.log(req.connection.remoteAddress,"hello")
         next()    
     } catch (error) {
         next(error)
