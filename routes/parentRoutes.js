@@ -14,6 +14,6 @@ const router = Router()
     "fatherName" : "taherrrr",
     "students" :[ {"name": "ramaaa", "age": 8},{"name" : "tamerrrr" , "age" : 9}]
     } */
-router.post('/addParent',parent.addParent)
+router.post('/addParent', parent.addParent)
 
 module.exports = router
