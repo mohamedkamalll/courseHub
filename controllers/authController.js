@@ -48,7 +48,8 @@ module.exports.googleAuth = function (req, res, next)
 
 module.exports.googleAuthCallBack = async (req, res, next) =>
 {
-  passport.authenticate('google', function (error, user)
+  passport.authenticate('google',
+   function (error, user)
   {
     console.log("caleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeed")
     if (error)
@@ -66,7 +67,7 @@ module.exports.googleAuthCallBack = async (req, res, next) =>
         const {firstName, lastName, birthDate, email, city, role, phone, username, activated} = user
         User = {firstName, lastName, birthDate, email, city, role, phone, username, activated}
         //      return res.status(200).send(User);
-        return res.send("<script>window.close();</script > ");
+        return res.send(`<script> window.opener.postMessage('replace your location', '*'); window.close(); </script>       `);
       }
     });
   }
