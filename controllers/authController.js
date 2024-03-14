@@ -38,6 +38,11 @@ module.exports.logIn = async (req, res, next) =>
   )(req, res, next);
 }
 
+module.exports.googleSuccess =async (req,res) =>{
+  console.log("sucessssssss")
+  res.send("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
+}
+
 module.exports.googleAuth = function (req, res, next)
 {
   passport.authenticate('google', {
@@ -48,8 +53,8 @@ module.exports.googleAuth = function (req, res, next)
 
 module.exports.googleAuthCallBack = async (req, res, next) =>
 {
-  passport.authenticate('google',
-   function (error, user)
+  passport.authenticate('google',{successRedirect :'googleSuccess'},
+  function (error, user)
   {
     console.log("caleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeed")
     if (error)

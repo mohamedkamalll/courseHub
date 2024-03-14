@@ -1,6 +1,7 @@
 const sql = require('mssql')
 const schema = require('./schema')
 const config = require('./databaseConfig.json')
+const Course = require('../controllers/courseController')
 
 //const config = JSON.parse(readFileSync('./databaseConfig.json','utf-8'))
 
@@ -19,10 +20,14 @@ module.exports.checkDatabase = async() =>{
        END`)
       console.log(isExist.recordset[0].code)
       if(isExist.recordset[0].code == '0'){
-         createDatabase()
+         await createDatabase()
          console.log('created successfully')
+         //addcourses
+         await createCourses()
+         console.log("courses add seccessfully")
+         sql.close()
 
-      }else{
+        }else{
         console.log('connected successfully')
         sql.close()
         //await sql.query(`Use academy`)
@@ -41,7 +46,6 @@ async function createDatabase(){
     await sql.query(`Use academy`)
    // console.log(schema)
     await sql.query(schema)
-  console.log(config)
 
   } catch (error) {
     console.log(error)    
@@ -49,6 +53,14 @@ async function createDatabase(){
 }
 
 
+async function createCourses(){
+  try {
+    query = `INSERT INTO academyCourses (courseName,courseLevel) VALUES ('Scratch',1),('python',1),('Html , Css',2),('JavaScript',2),('NodeJs',3),('ReactJs',3);`
+    await sql.query(query)    
+  } catch (error) {
+    console.log(error)    
+  }
+}
 
 
 

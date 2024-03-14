@@ -64,14 +64,27 @@ CREATE TABLE students(
   references users (userId)
 );
 
+CREATE TABLE academyCourses(
+  academyCourseId int IDENTITY(1,1),
+  courseName varchar(300),
+  courseLevel int,
+  constraint academyCourses_pk PRIMARY KEY (academyCourseId)
+);
+
 CREATE TABLE courses(
   courseId int IDENTITY(1,1),
   instructorId int,
   sessionsCount int,
+  academyCourseId int,
   constraint courses_pk PRIMARY KEY (courseId),
   constraint courses_fk FOREIGN KEY (instructorId)
-  references instructors (instructorId)
-);
+  references instructors (instructorId),
+  constraint courses_fk2 FOREIGN KEY (academyCourseId)
+  references academyCourses (academyCourseId)
+  );
+
+
+
 
 CREATE TABLE studentCourses(
   courseId int IDENTITY(1,1),
@@ -81,6 +94,9 @@ CREATE TABLE studentCourses(
   constraint studentCourses_fk2 FOREIGN KEY (studentId)
   references students (studentId)
 );
+
+
+
 
 CREATE TABLE sections(
   sectionId int IDENTITY(1,1),
@@ -99,7 +115,7 @@ CREATE TABLE lectures(
   constraint lectures_pk PRIMARY KEY (lectureId),
   constraint lecture_fk FOREIGN KEY (sectionId)
   references sections (sectionId)
-);
+); 
 
 CREATE TABLE quizes(
   quizId int IDENTITY(1,1),
