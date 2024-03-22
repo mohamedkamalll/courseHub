@@ -68,6 +68,9 @@ CREATE TABLE academyCourses(
   academyCourseId int IDENTITY(1,1),
   courseName varchar(300),
   courseLevel int,
+  coursePrice int,
+  courseImage varchar(250),
+  courseDescription varchar(300),
   constraint academyCourses_pk PRIMARY KEY (academyCourseId)
 );
 

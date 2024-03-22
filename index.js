@@ -2,7 +2,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const passport = require('passport');
-//comment to test termux git
+const fileUpload = require('express-fileupload');
 
 //Routes
 const userRoutes = require('./routes/userRoutes')
@@ -59,6 +59,9 @@ const limiter = rateLimit({
 // Apply the rate limiting middleware to all requests.
 app.use(limiter)
 
+// Use the express-fileupload middleware
+app.use(fileUpload());
+app.use("/cardImages",express.static("views/Cards"))
 //Create the session
 
 const MSSQLStore = require('connect-mssql-v2');

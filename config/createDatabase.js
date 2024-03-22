@@ -23,8 +23,8 @@ module.exports.checkDatabase = async() =>{
          await createDatabase()
          console.log('created successfully')
          //addcourses
-         await createCourses()
-         console.log("courses add seccessfully")
+        // await createCourses()
+         //console.log("courses add seccessfully")
          sql.close()
 
         }else{
@@ -53,14 +53,7 @@ async function createDatabase(){
 }
 
 
-async function createCourses(){
-  try {
-    query = `INSERT INTO academyCourses (courseName,courseLevel) VALUES ('Scratch',1),('python',1),('Html , Css',2),('JavaScript',2),('NodeJs',3),('ReactJs',3);`
-    await sql.query(query)    
-  } catch (error) {
-    console.log(error)    
-  }
-}
+
 
 
 
