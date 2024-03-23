@@ -68,5 +68,5 @@ module.exports.addCourse = async (req,res,next) => {
     } catch (error) {
       next(error.message)    
     }
-  }
+}
 
