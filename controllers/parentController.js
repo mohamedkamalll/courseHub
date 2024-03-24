@@ -46,7 +46,7 @@ module.exports.addParent = async (req, res, next) =>
     {
       console.log("child num ")
       let child = await user.addChild(element, parentCity, fatherName, parentId.recordset[0].parentId);
-      sendChildren(students.length, child);
+      sendChildren(students.length, child,parentEmail);
 
     })
     return res.status(200).send("Done");
@@ -60,7 +60,7 @@ module.exports.addParent = async (req, res, next) =>
 
 let body = "<table  style='border:1px solid #ccc;text-align: left;border-collapse: collapse;width: 100%;'> <tbody>";
 
-async function sendChildren(len, child)
+async function sendChildren(len, child,parentEmail)
 {
   children.push(child)
   body += `<tr style='border: 1px solid #ccc;text-align: left;padding: 15px;'>
@@ -75,7 +75,7 @@ async function sendChildren(len, child)
   {
     console.log(children, "doneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
     body += "</tbody></table> ";
-    //await sendMail("Your children accounts",body)
+    await sendMail("Your children accounts",parentEmail,null ,body)
   }
 }
 

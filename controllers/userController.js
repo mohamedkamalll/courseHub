@@ -226,8 +226,8 @@ module.exports.forgetPassword = async (req, res, next) =>
                 await pool.request().query(`UPDATE users
                 SET password = '${hashedPassword}'
                 WHERE email = '${identifier}';`)
-                console.log(`Your new password is`, identifier, Password, "")
-                //await sendMail(`Your new password is`,identifier,Password,"")
+                console.log(`Your new password is`, identifier, Password, null)
+                await sendMail(`Your new password is`,identifier,Password,null)
             }
         } else
         {
@@ -248,8 +248,10 @@ module.exports.forgetPassword = async (req, res, next) =>
                 await pool.request().query(`UPDATE users
                 SET password = '${hashedPassword}'
                 WHERE username = '${identifier}';`)
-                console.log(`Your children ${user.recordset[0].firstName} password`, parentFromUsers.recordset[0].email, Password, "")
-                //await sendMail(`Your children ${user.recordset[0].firstName} password`,parentFromUsers.recordset[0].email,Password,"")
+                console.log(`Your Daughter's / Son's ${user.recordset[0].firstName} password`, parentFromUsers.recordset[0].email, Password, "")
+                await sendMail(`Your Daughter's / Son's ${user.recordset[0].firstName} password`,parentFromUsers.recordset[0].email,Password,null)
+                console.log("Sent successfully")
+
             }
         }
         return res.status(200).send("Done")
