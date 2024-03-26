@@ -195,7 +195,7 @@ user try to auth the account with gmail  email = user.email  gmailid= null
             }
         } else
         {
-            throw new Error("User isnt existed")
+            throw new Error("<h1>User isnt existed</h1>")
         }
     } catch (error)
     {

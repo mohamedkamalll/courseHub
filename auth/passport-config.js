@@ -43,7 +43,7 @@ function intialize(){
         request = req
         try {
             user = await createAndGetGmailId(profile.email,profile.id,req) 
-            //console.log(user,"from passport . use")         
+            console.log(user,"from passport . use")         
             if(user){
                 done(null, user);
             }  else{
@@ -58,37 +58,7 @@ function intialize(){
       }
     ));
 
-    //jwttttttttttt
-    var JwtStrategy = require('passport-jwt').Strategy,
-    ExtractJwt = require('passport-jwt').ExtractJwt;
-    var opts = {}
-    opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-    opts.secretOrKey = 'secret';
-    opts.issuer = 'accounts.examplesoft.com';
-    opts.audience = 'yoursite.net';
-    opts.passReqToCallback = true
-    passport.use(new JwtStrategy(opts,async function(request,jwt_payload, done) {
-        console.log(req.body, "request.body");
-        console.log(email,password);
-        try {
-            let user = await getUser(email,req);
-            user = user.recordset[0]
-            console.log(user,"userr");
-            if (user == null){
-                console.log('invalid user name')
-                return done(new Error("no user with that email"),false)
-            }
-            if(await bcrypt.compare(password,user.password)){
-                return done(null,user)
-            }else{
-                return done(new Error('password incorrect') , false)
-            }
-        } catch (error) {
-            return done(error)
-        }
-    }));
 
-    ////////////////////////////////////////////
     
     try {
         passport.serializeUser((user,done) =>{ 

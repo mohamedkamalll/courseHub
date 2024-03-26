@@ -31,7 +31,7 @@ module.exports.deleteCourse = async(req,res,next) => {
 module.exports.createCourses = async (req,res,next) => {
     try {
       const pool = await poolPromise
-      query = `INSERT INTO academyCourses (courseName,courseLevel,coursePrice,courseImage,courseDescription) VALUES ('Scratch',1,3000,'s','jkhguyfgthg'),('python',1,4000,'m','jkhguyfgthg'),('Html , Css',2,3500,'l','jkhguyfgthg'),('JavaScript',2,3800,'hh','jkhguyfgthg');`
+      query = `INSERT INTO academyCourses (courseName,courseLevel,coursePrice,courseImage,courseDescription) VALUES ('Scratch',1,2500,'s','jkhguyfgthg'),('Python',1,3000,'m','jkhguyfgthg'),('Html , Css',2,3000,'l','jkhguyfgthg'),('JavaScript',2,3500,'hh','jkhguyfgthg'),('ReactJs',3,4000,'hh','jkhguyfgthg'),('NodeJs',3,4000,'hh','jkhguyfgthg');`
       await pool.request().query(query)    
       return res.status(200).send("Added Successfully");    
     } catch (error) {
